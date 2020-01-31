@@ -6,9 +6,10 @@
   "contributors": [
     "Maxime Thirouin",
     "Dyma Ywanov <dfcreative@gmail.com>",
-    "Josh Junon"
+    "Josh Junon",
+    "Léo Maradan"
   ],
-  "repository": "Qix-/color-string",
+  "repository": "leomaradan/color-string",
   "scripts": {
     "pretest": "xo",
     "test": "node test/basic.js"
