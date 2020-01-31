@@ -1,6 +1,6 @@
 /* MIT license */
-import colorNames, { RGB } from 'color-name';
-import swizzle from 'simple-swizzle';
+import * as colorNames from 'color-name';
+import * as swizzle from 'simple-swizzle';
 
 const reverseNames: Record<string, string> = {};
 
@@ -13,22 +13,18 @@ for (const name in colorNames) {
 }
 
 export type ColorModel = 'rgb' | 'hsl' | 'hwb' | 'hex' | 'keyword';
-export type ColorValue = [number, number, number, number];
+export type ColorValue = [number, number, number, number?];
 export interface Color {
 	model: ColorModel;
 	value: ColorValue
 };
 
-const get = (colorStr: string): Color | null => {
+const parseGeneric = (colorStr: string): Color | null => {
 	const prefix = colorStr.substring(0, 3).toLowerCase();
 	const hashPrefix = colorStr.substring(0, 1);
 
-	if (colorNames[colorStr] !== undefined) {
-		return { model: 'keyword', value: getKeyword(colorStr) as ColorValue };
-	}
-
 	if (hashPrefix === '#') {
-		const val = getHex(colorStr);
+		const val = parseHex(colorStr);
 
 		if (val !== null) {
 			return { model: 'hex', value: val };
@@ -40,27 +36,33 @@ const get = (colorStr: string): Color | null => {
 	let model: ColorModel;
 	switch (prefix) {
 		case 'hsl':
-			val = getHsl(colorStr);
+			val = parseHsl(colorStr);
 			model = 'hsl';
 			break;
 		case 'hwb':
-			val = getHwb(colorStr);
+			val = parseHwb(colorStr);
 			model = 'hwb';
 			break;
 		default:
-			val = getRgb(colorStr);
+			val = parseRgb(colorStr);
 			model = 'rgb';
 			break;
 	}
 
 	if (!val) {
+		val = parseKeyword(colorStr);
+		model = 'keyword';
+	}
+
+	if (!val) {
+
 		return null;
 	}
 
 	return { model: model, value: val };
 };
 
-const getRgb = (colorStr: string): ColorValue | null => {
+const parseRgb = (colorStr: string): ColorValue | null => {
 	if (!colorStr) {
 		return null;
 	}
@@ -92,14 +94,14 @@ const getRgb = (colorStr: string): ColorValue | null => {
 	}
 
 	for (let i = 0; i < 3; i++) {
-		rgb[i] = clamp(rgb[i], 0, 255);
+		rgb[i] = clamp(rgb[i] as number, 0, 255);
 	}
-	rgb[3] = clamp(rgb[3], 0, 1);
+	rgb[3] = clamp(rgb[3] as number, 0, 1);
 
 	return rgb;
 };
 
-const getHex = (colorStr: string): ColorValue | null => {
+const parseHex = (colorStr: string): ColorValue | null => {
 	const abbr = /^#([a-f0-9]{3,4})$/i;
 	const hex = /^#([a-f0-9]{6})([a-f0-9]{2})?$/i;
 
@@ -131,20 +133,22 @@ const getHex = (colorStr: string): ColorValue | null => {
 		if (hexAlpha) {
 			rgb[3] = Math.round((parseInt(hexAlpha + hexAlpha, 16) / 255) * 100) / 100;
 		}
+	} else {
+		return null;
 	}
 
 	for (let i = 0; i < 3; i++) {
-		rgb[i] = clamp(rgb[i], 0, 255);
+		rgb[i] = clamp(rgb[i] as number, 0, 255);
 	}
-	rgb[3] = clamp(rgb[3], 0, 1);
+	rgb[3] = clamp(rgb[3] as number, 0, 1);
 
 	return rgb;
 }
 
-const getKeyword = (colorStr: string): ColorValue | null => {
+const parseKeyword = (colorStr: string): ColorValue | null => {
 	const keyword = /(\D+)/;
 
-	let rgb: RGB = [0, 0, 0];
+	let rgb = [0, 0, 0];
 	let match;
 
 	if (match = colorStr.match(keyword)) {
@@ -152,7 +156,7 @@ const getKeyword = (colorStr: string): ColorValue | null => {
 			return [0, 0, 0, 0];
 		}
 
-		rgb = colorNames[match[1]];
+		rgb = (colorNames as any)[match[1]];
 
 		if (!rgb) {
 			return null;
@@ -164,8 +168,7 @@ const getKeyword = (colorStr: string): ColorValue | null => {
 	return null;
 }
 
-//get.hsl
-const getHsl = (colorStr: string): ColorValue | null => {
+const parseHsl = (colorStr: string): ColorValue | null => {
 	if (!colorStr) {
 		return null;
 	}
@@ -186,8 +189,7 @@ const getHsl = (colorStr: string): ColorValue | null => {
 	return null;
 };
 
-//get.hwb
-const getHwb = (colorStr: string): ColorValue | null => {
+const parseHwb = (colorStr: string): ColorValue | null => {
 	if (!colorStr) {
 		return null;
 	}
@@ -207,7 +209,7 @@ const getHwb = (colorStr: string): ColorValue | null => {
 	return null;
 };
 
-const toHex = (...args: ColorValue): string => {
+const formatHex = (...args: any): string => {
 	const rgba = swizzle(args);
 
 	return (
@@ -221,7 +223,7 @@ const toHex = (...args: ColorValue): string => {
 	);
 };
 
-const toRgb = (...args: ColorValue): string => {
+const formatRgb = (...args: any): string => {
 	const rgba = swizzle(args);
 
 	return rgba.length < 4 || rgba[3] === 1
@@ -229,7 +231,7 @@ const toRgb = (...args: ColorValue): string => {
 		: 'rgba(' + Math.round(rgba[0]) + ', ' + Math.round(rgba[1]) + ', ' + Math.round(rgba[2]) + ', ' + rgba[3] + ')';
 };
 
-const toRgbPercent = (...args: ColorValue): string => {
+const formatRgbPercent = (...args: any): string => {
 	const rgba = swizzle(args);
 
 	const r = Math.round(rgba[0] / 255 * 100);
@@ -241,7 +243,7 @@ const toRgbPercent = (...args: ColorValue): string => {
 		: 'rgba(' + r + '%, ' + g + '%, ' + b + '%, ' + rgba[3] + ')';
 };
 
-const toHsl = (...args: ColorValue): string => {
+const formatHsl = (...args: any): string => {
 	const hsla = swizzle(args);
 	return hsla.length < 4 || hsla[3] === 1
 		? 'hsl(' + hsla[0] + ', ' + hsla[1] + '%, ' + hsla[2] + '%)'
@@ -250,7 +252,7 @@ const toHsl = (...args: ColorValue): string => {
 
 // hwb is a bit different than rgb(a) & hsl(a) since there is no alpha specific syntax
 // (hwb have alpha optional & 1 is default value)
-const toHwb = (...args: ColorValue): string => {
+const formatHwb = (...args: any): string => {
 	const hwba = swizzle(args);
 
 	let a = '';
@@ -261,7 +263,7 @@ const toHwb = (...args: ColorValue): string => {
 	return 'hwb(' + hwba[0] + ', ' + hwba[1] + '%, ' + hwba[2] + '%' + a + ')';
 };
 
-const toKeyword = (rgb: ColorValue): string => {
+const formatKeyword = (rgb: ColorValue): string => {
 	const nameRGB = rgb.slice(0, 3).join(',');
 	return reverseNames[nameRGB];
 };
@@ -276,23 +278,25 @@ const hexDouble = (num: number): string => {
 	return (str.length < 2) ? '0' + str : str;
 }
 
-get.prototype.rgb = getRgb;
-get.prototype.hsl = getHsl;
-get.prototype.hwb = getHwb;
-get.prototype.keyword = getKeyword;
-get.prototype.hex = getHex;
+const parse = {
+	get: parseGeneric,
+	rgb: parseRgb,
+	hsl: parseHsl,
+	hwb: parseHwb,
+	keyword: parseKeyword,
+	hex: parseHex,
+}
 
-toRgb.prototype.percent = toRgbPercent;
-
-const to = {
-	hex: toHex,
-	rgb: toRgb,
-	hsl: toHsl,
-	hwb: toHwb,
-	keyword: toKeyword,
+const format = {
+	hex: formatHex,
+	rgb: formatRgb,
+	rgbPercent: formatRgbPercent,
+	hsl: formatHsl,
+	hwb: formatHwb,
+	keyword: formatKeyword,
 };
 
 export default {
-	to,
-	get
+	format,
+	parse
 };

@@ -1,18 +1,26 @@
 export declare type ColorModel = 'rgb' | 'hsl' | 'hwb' | 'hex' | 'keyword';
-export declare type ColorValue = [number, number, number, number];
+export declare type ColorValue = [number, number, number, number?];
 export interface Color {
     model: ColorModel;
     value: ColorValue;
 }
 declare const _default: {
-    to: {
-        hex: (args_0: number, args_1: number, args_2: number, args_3: number) => string;
-        rgb: (args_0: number, args_1: number, args_2: number, args_3: number) => string;
-        hsl: (args_0: number, args_1: number, args_2: number, args_3: number) => string;
-        hwb: (args_0: number, args_1: number, args_2: number, args_3: number) => string;
+    format: {
+        hex: (...args: any) => string;
+        rgb: (...args: any) => string;
+        rgbPercent: (...args: any) => string;
+        hsl: (...args: any) => string;
+        hwb: (...args: any) => string;
         keyword: (rgb: ColorValue) => string;
     };
-    get: (colorStr: string) => Color | null;
+    parse: {
+        get: (colorStr: string) => Color | null;
+        rgb: (colorStr: string) => ColorValue | null;
+        hsl: (colorStr: string) => ColorValue | null;
+        hwb: (colorStr: string) => ColorValue | null;
+        keyword: (colorStr: string) => ColorValue | null;
+        hex: (colorStr: string) => ColorValue | null;
+    };
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map
