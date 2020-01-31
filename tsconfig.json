@@ -2,6 +2,9 @@
 	"compilerOptions": {
 		"declaration": true,
 		"declarationMap": true,
+		"lib": [
+			"ES2015"
+		],
 		"module": "commonjs",
 		"newLine": "lf",
 		"noUnusedLocals": true,
@@ -9,12 +12,15 @@
 		"outDir": ".",
 		"preserveConstEnums": true,
 		"removeComments": true,
-		"strict": true
+		"strict": true,
+		"target": "es5"
 	},
 	"compileOnSave": true,
 	"include": [
 		"src/**/*",
 		"types/*.d.ts"
 	],
-	"exclude": []
+	"exclude": [
+		"node_modules/"
+	]
 }
