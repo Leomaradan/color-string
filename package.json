@@ -16,7 +16,8 @@
     "build": "tsc"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "index.d.ts"
   ],
   "jest": {
     "preset": "ts-jest",
