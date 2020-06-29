@@ -1,7 +1,7 @@
 {
   "name": "ts-color-string",
   "description": "Parser and generator for CSS color strings",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "author": "Heather Arthur <fayearthur@gmail.com>",
   "contributors": [
     "Maxime Thirouin",
@@ -38,5 +38,8 @@
     "colour",
     "rgb",
     "css"
-  ]
+  ],
+  "engines": {
+    "node": ">= 10.14.2"
+  }
 }

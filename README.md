@@ -1,8 +1,10 @@
 # color-string
 
 [![Build Status](https://travis-ci.com/Leomaradan/color-string.svg?branch=master)](https://travis-ci.com/Leomaradan/color-string)
+[![npm version](https://badge.fury.io/js/ts-color-string.svg)](https://badge.fury.io/js/ts-color-string)
 
 > library for parsing and generating CSS color strings.
+
 TypeScript-ready fork of [Qix-](https://github.com/Qix-/color-string) version
 
 ## Install
