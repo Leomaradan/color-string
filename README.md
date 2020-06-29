@@ -3,20 +3,21 @@
 [![Build Status](https://travis-ci.org/Qix-/color-string.svg?branch=master)](https://travis-ci.org/Qix-/color-string)
 
 > library for parsing and generating CSS color strings.
+TypeScript-ready fork of [Qix-](https://github.com/Qix-/color-string) version
 
 ## Install
 
 With [npm](http://npmjs.org/):
 
 ```console
-$ npm install color-string
+$ npm install ts-color-string
 ```
 
 ## Usage
 
 ### Parsing
 
-```js
+```typescript
 colorString.parse.get('#FFF')                          // {model: 'rgb', value: [255, 255, 255, 1]}
 colorString.parse.get('#FFFA')                         // {model: 'rgb', value: [255, 255, 255, 0.67]}
 colorString.parse.get('#FFFFFFAA')                     // {model: 'rgb', value: [255, 255, 255, 0.67]}
@@ -39,7 +40,7 @@ colorString.parse.get.rgb('invalid color string')      // null
 
 ### Generation
 
-```js
+```typescript
 colorString.format.hex([255, 255, 255])     // "#FFFFFF"
 colorString.format.hex([0, 0, 255, 0.4])    // "#0000FF66"
 colorString.format.hex([0, 0, 255], 0.4)    // "#0000FF66"

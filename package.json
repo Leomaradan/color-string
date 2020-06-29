@@ -1,5 +1,5 @@
 {
-  "name": "color-string",
+  "name": "ts-color-string",
   "description": "Parser and generator for CSS color strings",
   "version": "1.5.3",
   "author": "Heather Arthur <fayearthur@gmail.com>",
@@ -26,13 +26,12 @@
   "dependencies": {
     "color-name": "^1.0.0",
     "simple-swizzle": "^0.2.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
-    "@babel/preset-typescript": "^7.8.3",
     "@types/jest": "^26.0.3",
-    "jest": "^25.1.0",
-    "ts-jest": "^25.1.0"
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.1"
   },
   "keywords": [
     "color",
